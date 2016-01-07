@@ -2,7 +2,7 @@ import datetime
 
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 
 
 class RegisterForm(UserCreationForm):
@@ -33,3 +33,8 @@ class RegisterForm(UserCreationForm):
         if date > current_date:
             raise forms.ValidationError('NOPE')
         return date
+
+
+class ChangePasswordForm(PasswordChangeForm):
+    pass
+

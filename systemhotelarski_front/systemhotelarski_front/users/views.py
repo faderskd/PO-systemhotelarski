@@ -1,7 +1,9 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import CreateView
+from django.views.generic import CreateView, FormView
 
-from .forms import RegisterForm
+from braces.views import LoginRequiredMixin
+
+from .forms import RegisterForm, ChangePasswordForm
 
 
 class Register(SuccessMessageMixin, CreateView):
@@ -9,3 +11,17 @@ class Register(SuccessMessageMixin, CreateView):
     form_class = RegisterForm
     success_message = 'Thank you for registration! You can now log in.'
 
+
+class ChangePassword(SuccessMessageMixin, LoginRequiredMixin, FormView):
+    template_name = 'users/change_password.html'
+    form_class = ChangePasswordForm
+    success_message = 'Password changed successfully.'
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePassword, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super(ChangePassword, self).form_valid(form)
