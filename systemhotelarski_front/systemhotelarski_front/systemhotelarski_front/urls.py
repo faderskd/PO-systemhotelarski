@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^register/', Register.as_view(), name='register'),
     url(r'^change-password/', ChangePassword.as_view(), name='change_password'),
     url('^', include('django.contrib.auth.urls')),
+    url('^reservations/', include('reservations.urls')),
 ]

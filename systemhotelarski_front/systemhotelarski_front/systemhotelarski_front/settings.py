@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'braces',
 
     'users',
+    'reservations',
 ]
 
 MIDDLEWARE_CLASSES = [
