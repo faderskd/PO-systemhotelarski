@@ -3,7 +3,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
 
