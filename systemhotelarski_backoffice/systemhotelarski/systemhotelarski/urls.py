@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register(r'reservations', views.ReservationViewSet)
+router.register(r'reservations2', views.ReservationViewSet)
 
 rooms_patterns = [
     url(r'^$', views.room_list),
@@ -23,7 +23,7 @@ reservations_patterns = [
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^reservations2/', include(reservations_patterns)),
+    url(r'^reservations/', include(reservations_patterns)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^rooms/', include(rooms_patterns, namespace='rooms')),

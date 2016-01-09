@@ -24,6 +24,16 @@ class Room(models.Model):
 
 
 class ReservationManager(models.Manager):
+
+    def reservation_exists(cls, start_date, end_date, room):
+        reservation_exists = cls.get_queryset().filter(
+            (Q(end_date__lte=end_date) & Q(end_date__gt=start_date)) |
+            (Q(start_date__lt=end_date) & Q(start_date__gte=start_date)) |
+            (Q(start_date__lte=start_date) & Q(end_date__gte=end_date)),
+            room=room
+        ).exists()
+        return reservation_exists
+
     def active(self):
         now = datetime.datetime.now()
         return self.get_queryset().filter(end_date__gte=now)
@@ -59,16 +69,6 @@ class Reservation(models.Model):
             self.user.first_name,
             self.user.last_name
         )
-
-    @classmethod
-    def reservation_exists(cls, start_date, end_date, room):
-        reservation_exists = cls.objects.filter(
-            (Q(end_date__lte=end_date) & Q(end_date__gt=start_date)) |
-            (Q(start_date__lt=end_date) & Q(start_date__gte=start_date)) |
-            (Q(start_date__lte=start_date) & Q(end_date__gte=end_date)),
-            room=room
-        ).exists()
-        return reservation_exists
 
     @property
     def is_active(self):
