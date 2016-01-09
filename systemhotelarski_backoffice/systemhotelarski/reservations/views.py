@@ -30,7 +30,7 @@ def reservation_list(request):
         if reservation_serializer.is_valid():
             reservation_serializer.save()
             return JSONResponse(reservation_serializer.data, status=status.HTTP_201_CREATED)
-        return JSONResponse(reservation_serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return JSONResponse(reservation_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
