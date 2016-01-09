@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=(!7nrpq*=f0g+tj%+ra3d95(goxun9wn#t=v-+(rdpsl#9m6w'
+SECRET_KEY = 'vu)bl2xd6f87g_mitich^hpqz7c+c%pa3_(oy-x50z$q6p*l-w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # urility packages
     'rest_framework',
+
+    # apps
+    'reservations',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,15 +91,15 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -102,3 +107,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+DATETIME_FORMAT = "%d-%m-%Y %H:%m"

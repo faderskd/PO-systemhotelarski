@@ -1,21 +1,30 @@
-"""systemhotelarski URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.8/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Add an import:  from blog import urls as blog_urls
-    2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
-"""
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from reservations import views
+from rest_framework.routers import DefaultRouter
+
+
+router = DefaultRouter()
+router.register(r'reservations2', views.ReservationViewSet)
+
+rooms_patterns = [
+    url(r'^$', views.room_list),
+]
+
+reservations_patterns = [
+    url(r'^active$', views.reservation_active_list),
+    url(r'^inactive$', views.reservation_inactive_list),
+    url(r'^active/user/(?P<user_pk>[0-9]+)$', views.user_reservation_list_active),
+    url(r'^inactive/user/(?P<user_pk>[0-9])$', views.user_reservation_list_inactive),
+    # url(r'^(?P<pk>[0-9]+)$', views.room_list),
+]
+
+
 urlpatterns = [
+    url(r'^', include(router.urls)),
+    url(r'^reservations/', include(reservations_patterns)),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^rooms/', include(rooms_patterns, namespace='rooms')),
 ]
