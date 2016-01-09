@@ -1,5 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import CreateView, FormView
+from django.core.urlresolvers import reverse_lazy
 
 from braces.views import LoginRequiredMixin
 
@@ -10,6 +11,7 @@ class Register(SuccessMessageMixin, CreateView):
     template_name = 'registration/register.html'
     form_class = RegisterForm
     success_message = 'Thank you for registration! You can now log in.'
+    success_url = reverse_lazy('login')
 
 
 class ChangePassword(SuccessMessageMixin, LoginRequiredMixin, FormView):
