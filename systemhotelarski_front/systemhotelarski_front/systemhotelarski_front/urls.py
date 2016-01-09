@@ -3,8 +3,10 @@ from django.contrib import admin
 from django.contrib.auth import views
 
 from users.views import Register, ChangePassword
+from reservations.views import index
 
 urlpatterns = [
+    url(r'^$', index, name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'^register/', Register.as_view(), name='register'),
     url(r'^change-password/', ChangePassword.as_view(), name='change_password'),
