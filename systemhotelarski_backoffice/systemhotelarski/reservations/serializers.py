@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.validators import ValidationError
 
 from rest_framework import serializers
@@ -6,14 +8,20 @@ from .models import Reservation, Room
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+
+    is_active = serializers.SerializerMethodField()
+
     class Meta:
         model = Reservation
-        fields = ('id', 'room', 'user', 'start_date', 'end_date', )
+        fields = ('id', 'room', 'user', 'start_date', 'end_date', 'is_active')
+
+    def get_is_active(self, obj):
+        return obj.is_active
 
     def _dates_are_valid(self, start_date, end_date):
+        now = datetime.datetime.now()
         delta = end_date - start_date
-        print(delta.days)
-        if delta.days < 1:
+        if delta.days < 1 or start_date < now or end_date < now:
             raise ValidationError('Incorrect dates')
         return True
 

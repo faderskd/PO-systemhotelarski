@@ -1,7 +1,8 @@
+import datetime
+
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 
 
@@ -22,6 +23,22 @@ class Room(models.Model):
         return "Room - {}".format(self.number)
 
 
+class ReservationManager(models.Manager):
+    def active(self):
+        now = datetime.datetime.now()
+        return self.get_queryset().filter(end_date__gte=now)
+
+    def inactive(self):
+        now = datetime.datetime.now()
+        return self.get_queryset().filter(end_date__lt=now)
+
+    def user_active(self, user_pk):
+        return self.active().filter(user__pk=user_pk)
+
+    def user_inactive(self, user_pk):
+        return self.inactive().filter(user__pk=user_pk)
+
+
 class Reservation(models.Model):
     room = models.ForeignKey(
         'reservations.Room'
@@ -31,6 +48,8 @@ class Reservation(models.Model):
     )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+
+    objects = ReservationManager()
 
     class Meta:
         ordering = ('start_date', )
@@ -50,4 +69,11 @@ class Reservation(models.Model):
             room=room
         ).exists()
         return reservation_exists
+
+    @property
+    def is_active(self):
+        now = datetime.datetime.now()
+        return self.end_date >= now
+
+
 
