@@ -34,11 +34,11 @@ class ReservationManager(models.Manager):
         return reservation_exists
 
     def active(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         return self.get_queryset().filter(end_date__gte=now)
 
     def inactive(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         return self.get_queryset().filter(end_date__lt=now)
 
     def user_active(self, user_pk):
@@ -55,8 +55,8 @@ class Reservation(models.Model):
     user_pk = models.PositiveIntegerField(
         validators=[MinValueValidator(0)]
     )
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
 
     objects = ReservationManager()
 
@@ -70,7 +70,7 @@ class Reservation(models.Model):
 
     @property
     def is_active(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         return self.end_date >= now
 
 

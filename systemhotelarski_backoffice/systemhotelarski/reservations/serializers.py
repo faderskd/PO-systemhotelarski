@@ -19,7 +19,7 @@ class ReservationSerializer(serializers.ModelSerializer):
         return obj.is_active
 
     def _dates_are_valid(self, start_date, end_date):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         delta = end_date - start_date
         if delta.days < 1 or start_date < now or end_date < now:
             raise ValidationError('Incorrect dates')
