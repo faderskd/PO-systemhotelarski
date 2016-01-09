@@ -6,10 +6,15 @@ from braces.views import LoginRequiredMixin
 
 class ReservationList(LoginRequiredMixin, ListView):
     template_name = 'reservations/reservation_list.html'
-    queryset = []
 
     def get_queryset(self):
-        pass
+        """
+        w tej metodzie trzeba zassac rezerwacje usera z api i zwrocic.
+        """
+        user = self.request.user
+        user_pk = user.pk
+        reservations = None
+        return reservations
 
 
 def index(request):

@@ -2,5 +2,13 @@
 
 {% block body %}
     {% include '_nav.html' %}
-    <p>lista rezerwacji</p>
+    <div>
+        {% for r in object_list %}
+            <div>
+                <p>From {{ r.start_date }} to {{ r.end_date }}</p>
+
+                <p>Room: {{ r.room.number }}</p>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock body %}
