@@ -2,7 +2,6 @@ import datetime
 
 from django.db import models
 from django.db.models import Q
-from django.conf import settings
 from django.core.validators import MinValueValidator
 
 
@@ -43,18 +42,18 @@ class ReservationManager(models.Manager):
         return self.get_queryset().filter(end_date__lt=now)
 
     def user_active(self, user_pk):
-        return self.active().filter(user__pk=user_pk)
+        return self.active().filter(user_pk=user_pk)
 
     def user_inactive(self, user_pk):
-        return self.inactive().filter(user__pk=user_pk)
+        return self.inactive().filter(user_pk=user_pk)
 
 
 class Reservation(models.Model):
     room = models.ForeignKey(
         'reservations.Room'
     )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+    user_pk = models.PositiveIntegerField(
+        validators=[MinValueValidator(0)]
     )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -65,9 +64,8 @@ class Reservation(models.Model):
         ordering = ('start_date', )
 
     def __str__(self):
-        return "Reservation {} {}".format(
-            self.user.first_name,
-            self.user.last_name
+        return "Reservation {}".format(
+            self.user_pk
         )
 
     @property

@@ -13,7 +13,7 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('id', 'room', 'user', 'start_date', 'end_date', 'is_active')
+        fields = ('id', 'room', 'user_pk', 'start_date', 'end_date', 'is_active')
 
     def get_is_active(self, obj):
         return obj.is_active
