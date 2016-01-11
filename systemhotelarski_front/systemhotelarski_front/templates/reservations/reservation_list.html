@@ -2,13 +2,24 @@
 
 {% block body %}
     {% include '_nav.html' %}
-    <div>
-        {% for r in object_list %}
-            <div>
-                <p>From {{ r.start_date }} to {{ r.end_date }}</p>
-
-                <p>Room: {{ r.room.number }}</p>
-            </div>
-        {% endfor %}
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Room</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in object_list %}
+                <tr>
+                    <td>{{ r.start_date }}</td>
+                    <td>{{ r.end_date }}</td>
+                    <td>dupa</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock body %}

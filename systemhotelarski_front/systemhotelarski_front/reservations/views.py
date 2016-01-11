@@ -1,3 +1,4 @@
+import requests
 from django.views.generic import ListView
 from django.shortcuts import redirect
 
@@ -13,7 +14,8 @@ class ReservationList(LoginRequiredMixin, ListView):
         """
         user = self.request.user
         user_pk = user.pk
-        reservations = None
+        r = requests.get('http://localhost:8001/reservations/')
+        reservations = r.json()
         return reservations
 
 
