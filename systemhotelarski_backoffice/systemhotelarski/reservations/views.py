@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import status
@@ -25,6 +24,13 @@ def reservation_list(request):
         reservation_serializer = ReservationSerializer(reservations, many=True)
         return JSONResponse(reservation_serializer.data)
     elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        reservation_serializer = ReservationSerializerCreate(data=data)
+        if reservation_serializer.is_valid():
+            reservation_serializer.save()
+            return JSONResponse(reservation_serializer.data, status=status.HTTP_201_CREATED)
+        return JSONResponse(reservation_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PUT':
         data = JSONParser().parse(request)
         reservation_serializer = ReservationSerializerCreate(data=data)
         if reservation_serializer.is_valid():
@@ -63,4 +69,4 @@ def user_reservation_list_inactive(request, user_pk):
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
-    serializer_class = ReservationSerializerCreate
+    serializer_class = ReservationSerializer

@@ -23,15 +23,15 @@ class Room(models.Model):
 
 
 class ReservationManager(models.Manager):
-
-    def reservation_exists(cls, start_date, end_date, room):
-        reservation_exists = cls.get_queryset().filter(
+    def find_room(self, start_date, end_date):
+        reserved_rooms = self.get_queryset().filter(
             (Q(end_date__lte=end_date) & Q(end_date__gt=start_date)) |
             (Q(start_date__lt=end_date) & Q(start_date__gte=start_date)) |
             (Q(start_date__lte=start_date) & Q(end_date__gte=end_date)),
-            room=room
-        ).exists()
-        return reservation_exists
+        ).values_list('room', flat=True)
+        rooms = Room.objects.exclude(id__in=reserved_rooms)
+        # if exclude and exclude.start_date == start_date and exclude.end_date == end_date
+        return rooms.first()
 
     def active(self):
         now = datetime.datetime.now().date()
