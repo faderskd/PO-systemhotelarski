@@ -18,7 +18,8 @@ class ReservationSerializerCreate(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ('id', 'user_pk', 'start_date', 'end_date', 'is_active')
+        fields = ('id', 'user_pk', 'room', 'start_date', 'end_date', 'is_active')
+        read_only_fields = ('room',)
 
     def get_is_active(self, obj):
         return obj.is_active
@@ -37,8 +38,7 @@ class ReservationSerializerCreate(serializers.ModelSerializer):
         if not self._dates_are_valid(start_date, end_date):
             raise ValidationError('Incorrect dates')
 
-        room = self.instance.room if self.instance else None
-        self.room = Reservation.objects.find_room(start_date, end_date, exclude=room)
+        self.room = Reservation.objects.find_room(start_date, end_date, exclude=self.instance)
 
         if not self.room:
             raise ValidationError('No rooms available')
@@ -47,6 +47,7 @@ class ReservationSerializerCreate(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         return super().save(room=self.room)
+
 
 class ReservationSerializer(ReservationSerializerCreate):
     room = RoomSerializer()

@@ -69,4 +69,4 @@ def user_reservation_list_inactive(request, user_pk):
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationSerializerCreate

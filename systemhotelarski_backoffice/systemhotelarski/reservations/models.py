@@ -23,14 +23,24 @@ class Room(models.Model):
 
 
 class ReservationManager(models.Manager):
-    def find_room(self, start_date, end_date):
-        reserved_rooms = self.get_queryset().filter(
+    def find_room(self, start_date, end_date, exclude):
+        reservations_from_dates = self.get_queryset().filter(
             (Q(end_date__lte=end_date) & Q(end_date__gt=start_date)) |
             (Q(start_date__lt=end_date) & Q(start_date__gte=start_date)) |
             (Q(start_date__lte=start_date) & Q(end_date__gte=end_date)),
-        ).values_list('room', flat=True)
+        )
+
+        if exclude:
+            reservations_from_dates = reservations_from_dates.exclude(
+                id=exclude.id
+            )
+
+        reserved_rooms = reservations_from_dates.values_list(
+            'room',
+            flat=True
+        )
+
         rooms = Room.objects.exclude(id__in=reserved_rooms)
-        # if exclude and exclude.start_date == start_date and exclude.end_date == end_date
         return rooms.first()
 
     def active(self):
