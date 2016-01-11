@@ -49,9 +49,6 @@ def reservation_inactive_list(request):
 
 @csrf_exempt
 def user_reservation_list_active(request, user_pk):
-    if not get_user_model().objects.filter(pk=user_pk).exists():
-        return JSONResponse(data={}, status=status.HTTP_404_NOT_FOUND)
-
     reservations = Reservation.objects.user_active(user_pk)
     reservation_serializer = ReservationSerializer(reservations, many=True)
     return JSONResponse(data=reservation_serializer.data, status=status.HTTP_404_NOT_FOUND)
@@ -59,9 +56,6 @@ def user_reservation_list_active(request, user_pk):
 
 @csrf_exempt
 def user_reservation_list_inactive(request, user_pk):
-    if not get_user_model().objects.filter(pk=user_pk).exists():
-        return JSONResponse(data={}, status=status.HTTP_404_NOT_FOUND)
-
     reservations = Reservation.objects.user_inactive(user_pk)
     resevation_serializer = ReservationSerializer(reservations, many=True)
     return JSONResponse(resevation_serializer.data)
