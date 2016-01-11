@@ -7,7 +7,7 @@ from rest_framework.parsers import JSONParser
 
 
 from .models import Room, Reservation
-from .serializers import RoomSerializer, ReservationSerializer
+from .serializers import RoomSerializer, ReservationSerializer, ReservationSerializerCreate
 from core.utlis import JSONResponse
 
 
@@ -26,7 +26,7 @@ def reservation_list(request):
         return JSONResponse(reservation_serializer.data)
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        reservation_serializer = ReservationSerializer(data=data)
+        reservation_serializer = ReservationSerializerCreate(data=data)
         if reservation_serializer.is_valid():
             reservation_serializer.save()
             return JSONResponse(reservation_serializer.data, status=status.HTTP_201_CREATED)
@@ -69,4 +69,4 @@ def user_reservation_list_inactive(request, user_pk):
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationSerializerCreate

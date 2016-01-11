@@ -7,8 +7,13 @@ from rest_framework import serializers
 from .models import Reservation, Room
 
 
-class ReservationSerializer(serializers.ModelSerializer):
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('id', 'number', 'capacity', 'price_for_night',)
 
+
+class ReservationSerializerCreate(serializers.ModelSerializer):
     is_active = serializers.SerializerMethodField()
 
     class Meta:
@@ -39,8 +44,5 @@ class ReservationSerializer(serializers.ModelSerializer):
         return data
 
 
-class RoomSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Room
-        fields = ('id', 'number', 'capacity', 'price_for_night',)
-
+class ReservationSerializer(ReservationSerializerCreate):
+    room = RoomSerializer()
