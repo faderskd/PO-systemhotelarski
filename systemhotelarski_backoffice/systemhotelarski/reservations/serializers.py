@@ -39,6 +39,7 @@ class ReservationSerializerCreate(serializers.ModelSerializer):
             raise ValidationError('Incorrect dates')
 
         if Reservation.objects.reservation_exists(start_date, end_date, room):
+            reservation = Reservation
             raise ValidationError('This room is reserved in this period')
 
         return data
