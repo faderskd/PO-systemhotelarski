@@ -37,4 +37,3 @@ class RegisterForm(UserCreationForm):
 
 class ChangePasswordForm(PasswordChangeForm):
     pass
-

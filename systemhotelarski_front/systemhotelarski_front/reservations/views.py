@@ -1,8 +1,10 @@
 import requests
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 from django.shortcuts import redirect
 
 from braces.views import LoginRequiredMixin
+
+from .forms import ReservationForm
 
 
 class ReservationList(LoginRequiredMixin, ListView):
@@ -14,7 +16,7 @@ class ReservationList(LoginRequiredMixin, ListView):
         """
         user = self.request.user
         user_pk = user.pk
-        r = requests.get('http://localhost:8001/reservations/')
+        r = requests.get('http://localhost:8001/reservations/active/user/{pk}'.format(pk=user_pk))
         reservations = r.json()
         return reservations
 
@@ -24,3 +26,8 @@ def index(request):
         return redirect('reservation_list')
     else:
         return redirect('login')
+
+
+class AddReservation(LoginRequiredMixin, FormView):
+    template_name = 'reservations/add_reservation.html'
+    form_class = ReservationForm
