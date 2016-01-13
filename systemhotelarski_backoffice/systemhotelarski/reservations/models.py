@@ -67,6 +67,7 @@ class Reservation(models.Model):
     )
     start_date = models.DateField()
     end_date = models.DateField()
+    is_active = models.BooleanField()
 
     objects = ReservationManager()
 
@@ -81,11 +82,6 @@ class Reservation(models.Model):
     @property
     def capacity(self):
         return self.room.capacity
-
-    @property
-    def is_active(self):
-        now = datetime.datetime.now().date()
-        return self.end_date >= now
 
 
 
