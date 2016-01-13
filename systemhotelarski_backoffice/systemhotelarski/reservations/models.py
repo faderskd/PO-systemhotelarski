@@ -67,7 +67,7 @@ class Reservation(models.Model):
     )
     start_date = models.DateField()
     end_date = models.DateField()
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=False)
 
     objects = ReservationManager()
 

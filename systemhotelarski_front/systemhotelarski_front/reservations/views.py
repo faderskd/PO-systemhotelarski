@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 
 from braces.views import LoginRequiredMixin
 
-from .forms import ReservationForm
+from .forms import ReservationForm, ActivateReservationForm
 
 
 class ReservationList(LoginRequiredMixin, ListView):
@@ -18,6 +18,7 @@ class ReservationList(LoginRequiredMixin, ListView):
         user_pk = user.pk
         r = requests.get('http://localhost:8001/reservations/active/user/{pk}'.format(pk=user_pk))
         reservations = r.json()
+        print("AAA", self.request.user.pk)
         return reservations
 
 
@@ -31,3 +32,8 @@ def index(request):
 class AddReservation(LoginRequiredMixin, FormView):
     template_name = 'reservations/add_reservation.html'
     form_class = ReservationForm
+
+
+class ActivateReservationView(LoginRequiredMixin, FormView):
+    template_name = 'reservations/activate_reservation_form.html'
+    form_class = ActivateReservationForm
