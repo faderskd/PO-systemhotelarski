@@ -20,6 +20,12 @@ class ReservationList(LoginRequiredMixin, ListView):
         reservations = r.json()
         return reservations
 
+class RoomList(LoginRequiredMixin, ListView):
+    template_name = 'reservations/room_list.html'
+
+    def get_queryset(self):
+        return [{'number': 1, 'capacity': 2}, {'number': 2, 'capacity': 4}] 
+
 
 def index(request):
     if request.user.is_authenticated():
