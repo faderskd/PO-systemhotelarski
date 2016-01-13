@@ -1,4 +1,5 @@
 import requests
+import json
 from django.views.generic import ListView, FormView
 from django.shortcuts import redirect
 
@@ -37,3 +38,15 @@ def index(request):
 class AddReservation(LoginRequiredMixin, FormView):
     template_name = 'reservations/add_reservation.html'
     form_class = ReservationForm
+    
+    def form_valid(self, form):
+        data = form.cleaned_data
+        start_date = data['start_date'].strftime('%Y-%m-%d')
+        end_date = data['end_date'].strftime('%Y-%m-%d')
+        capacity = str(data['capacity'])
+        user = str(self.request.user.pk)
+        print(user)
+        send_data = json.dumps({'start_date':start_date, 'end_date':end_date, 'capacity':capacity, 'user_pk':user})
+        print(send_data)
+        r = requests.post('http://localhost:8001/reservations/',data=send_data)
+        return super(AddReservation,self).form_valid(form)
