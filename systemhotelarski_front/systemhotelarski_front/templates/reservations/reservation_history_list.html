@@ -17,7 +17,7 @@
             <th>From</th>
             <th>To</th>
             <th>Room</th>
-            <th>Active</th>
+            
         </tr>
         </thead>
         <tbody>
@@ -25,10 +25,8 @@
         <tr>
             <td>{{ r.start_date }}</td>
             <td>{{ r.end_date }}</td>
-            <td>dupa</td>
-            <td><a href="change_reservation_status/{{r.id}}/{{r.is_active}}">
-                <button style="width:70px">{{ r.is_active }}</button>
-            </a></td>
+            <td>alamakota</td>
+            
         </tr>
         {% endfor %}
         </tbody>

@@ -15,7 +15,6 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializerCreate(serializers.ModelSerializer):
-    is_active = serializers.SerializerMethodField()
     capacity = serializers.IntegerField()
 
     class Meta:
@@ -35,9 +34,6 @@ class ReservationSerializerCreate(serializers.ModelSerializer):
         ret = super().to_representation(instance)
         ret.update({'capacity': instance.room.capacity})
         return ret
-
-    def get_is_active(self, obj):
-        return obj.is_active
 
     def _dates_are_valid(self, start_date, end_date):
         now = datetime.datetime.now().date()
