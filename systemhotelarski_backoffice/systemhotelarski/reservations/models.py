@@ -23,7 +23,7 @@ class Room(models.Model):
 
 
 class ReservationManager(models.Manager):
-    def find_room(self, start_date, end_date, exclude):
+    def find_room(self, start_date, end_date, capacity, exclude):
         reservations_from_dates = self.get_queryset().filter(
             (Q(end_date__lte=end_date) & Q(end_date__gt=start_date)) |
             (Q(start_date__lt=end_date) & Q(start_date__gte=start_date)) |
@@ -40,7 +40,7 @@ class ReservationManager(models.Manager):
             flat=True
         )
 
-        rooms = Room.objects.exclude(id__in=reserved_rooms)
+        rooms = Room.objects.filter(capacity=capacity).exclude(id__in=reserved_rooms)
         return rooms.first()
 
     def active(self):
@@ -77,6 +77,10 @@ class Reservation(models.Model):
         return "Reservation {}".format(
             self.user_pk
         )
+
+    @property
+    def capacity(self):
+        return self.room.capacity
 
     @property
     def is_active(self):

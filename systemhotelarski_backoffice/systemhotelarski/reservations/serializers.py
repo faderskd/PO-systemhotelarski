@@ -1,6 +1,7 @@
 import datetime
 
 from django.core.validators import ValidationError
+from django.utils.functional import cached_property
 
 from rest_framework import serializers
 
@@ -15,11 +16,25 @@ class RoomSerializer(serializers.ModelSerializer):
 
 class ReservationSerializerCreate(serializers.ModelSerializer):
     is_active = serializers.SerializerMethodField()
+    capacity = serializers.IntegerField()
 
     class Meta:
         model = Reservation
-        fields = ('id', 'user_pk', 'room', 'start_date', 'end_date', 'is_active')
+        fields = ('id', 'user_pk', 'room', 'start_date', 'end_date', 'is_active', 'capacity')
         read_only_fields = ('room',)
+
+
+    @cached_property
+    def _readable_fields(self):
+        return [
+            field for field in self.fields.values()
+            if not field.write_only and not field.field_name == 'capacity'
+        ]
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret.update({'capacity': instance.room.capacity})
+        return ret
 
     def get_is_active(self, obj):
         return obj.is_active
@@ -34,16 +49,25 @@ class ReservationSerializerCreate(serializers.ModelSerializer):
     def validate(self, data):
         start_date = data.get('start_date')
         end_date = data.get('end_date')
+        capacity = data.get('capacity')
 
         if not self._dates_are_valid(start_date, end_date):
             raise ValidationError('Incorrect dates')
 
-        self.room = Reservation.objects.find_room(start_date, end_date, exclude=self.instance)
+        self.room = Reservation.objects.find_room(start_date, end_date, capacity, exclude=self.instance)
 
         if not self.room:
             raise ValidationError('No rooms available')
 
         return data
+
+    def create(self, validated_data):
+        validated_data.pop('capacity')
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('capacity')
+        return super().update(instance, validated_data)
 
     def save(self, **kwargs):
         return super().save(room=self.room)
