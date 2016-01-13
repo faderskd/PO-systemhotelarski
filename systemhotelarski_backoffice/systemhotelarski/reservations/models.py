@@ -23,22 +23,32 @@ class Room(models.Model):
 
 
 class ReservationManager(models.Manager):
-
-    def reservation_exists(cls, start_date, end_date, room):
-        reservation_exists = cls.get_queryset().filter(
+    def find_room(self, start_date, end_date, capacity, exclude):
+        reservations_from_dates = self.get_queryset().filter(
             (Q(end_date__lte=end_date) & Q(end_date__gt=start_date)) |
             (Q(start_date__lt=end_date) & Q(start_date__gte=start_date)) |
             (Q(start_date__lte=start_date) & Q(end_date__gte=end_date)),
-            room=room
-        ).exists()
-        return reservation_exists
+        )
+
+        if exclude:
+            reservations_from_dates = reservations_from_dates.exclude(
+                id=exclude.id
+            )
+
+        reserved_rooms = reservations_from_dates.values_list(
+            'room',
+            flat=True
+        )
+
+        rooms = Room.objects.filter(capacity=capacity).exclude(id__in=reserved_rooms)
+        return rooms.first()
 
     def active(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         return self.get_queryset().filter(end_date__gte=now)
 
     def inactive(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         return self.get_queryset().filter(end_date__lt=now)
 
     def user_active(self, user_pk):
@@ -55,8 +65,8 @@ class Reservation(models.Model):
     user_pk = models.PositiveIntegerField(
         validators=[MinValueValidator(0)]
     )
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
 
     objects = ReservationManager()
 
@@ -69,8 +79,12 @@ class Reservation(models.Model):
         )
 
     @property
+    def capacity(self):
+        return self.room.capacity
+
+    @property
     def is_active(self):
-        now = datetime.datetime.now()
+        now = datetime.datetime.now().date()
         return self.end_date >= now
 
 

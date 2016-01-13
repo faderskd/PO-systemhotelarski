@@ -18,6 +18,7 @@ class ChangePassword(SuccessMessageMixin, LoginRequiredMixin, FormView):
     template_name = 'users/change_password.html'
     form_class = ChangePasswordForm
     success_message = 'Password changed successfully.'
+    success_url = reverse_lazy('logout')
 
     def get_form_kwargs(self):
         kwargs = super(ChangePassword, self).get_form_kwargs()

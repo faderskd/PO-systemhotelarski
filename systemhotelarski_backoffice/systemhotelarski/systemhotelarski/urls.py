@@ -13,6 +13,7 @@ rooms_patterns = [
 ]
 
 reservations_patterns = [
+    url(r'^$', views.reservation_list),
     url(r'^active$', views.reservation_active_list),
     url(r'^inactive$', views.reservation_inactive_list),
     url(r'^active/user/(?P<user_pk>[0-9]+)$', views.user_reservation_list_active),
