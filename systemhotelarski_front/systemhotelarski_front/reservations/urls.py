@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     url('^$', views.ReservationList.as_view(), name='reservation_list'),
-    url('^activate_reservation_form/$', views.ActivateReservationView.as_view(), name='activate_reservation_form'),
-    url('^activate_reservation_form/activate/$', views.ActivateReservationView.as_view(), name='activate_reservation_form'),
+    url('^rooms/$', views.RoomList.as_view(), name='room_list'),
+    url('^change_reservation_status/(?P<reservation_id>[0-9]+)/(?P<reservation_status>\w+)/$', views.change_reservation_status, name='change_reservation_status'),
 ]
