@@ -22,6 +22,35 @@ class ReservationList(LoginRequiredMixin, ListView):
         r = requests.get('http://localhost:8001/reservations/active/user/{pk}'.format(pk=user_pk))
         reservations = r.json()
         return reservations
+    #localhost:8001/reservations
+    #przelatywac po wszystkich, zbierac nieaktywne i wypisywac, zwracac jako reservation
+    #enddate<currentdate
+    
+class ReservationHistoryList(LoginRequiredMixin, ListView):
+    template_name = 'reservations/reservation_history_list.html'
+
+    def get_queryset(self):
+        """
+        w tej metodzie trzeba zassac rezerwacje usera z api i zwrocic.
+        """
+        r = requests.get('http://localhost:8001/reservations')
+        r = r.json()
+        reservations = []
+        for x in r :
+
+            enddate = x["end_date"]
+            enddate = datetime.datetime.strptime(enddate, "%Y-%m-%d")
+            currentdate = datetime.datetime.now()
+            if currentdate + datetime.timedelta(days=600) < enddate:
+                continue
+            if not x["is_active"]:
+                reservations.append(x)
+             
+        
+        
+        
+        
+        return reservations    
 
 class RoomList(LoginRequiredMixin, ListView):
     template_name = 'reservations/room_list.html'
